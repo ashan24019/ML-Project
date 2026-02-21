@@ -22,18 +22,18 @@ class DataTransformation: # This function is responsible for data transformation
     
     def get_data_transformer_object(self):
         try:
-            numerical_columns = ["reading score","writing score"]
-            catergorical_columns = [
+            numerical_columns = ["reading_score","writing_score"]
+            categorical_columns = [
                 "gender",
-                "race/ethnicity",
-                "parental level of education",
+                "race_ethnicity",
+                "parental_level_of_education",
                 "lunch",
-                "test preparation course"
+                "test_preparation_course"
             ]
 
             num_pipeline = Pipeline(
                 steps=[
-                    ("imputer", SimpleImputer(strategy="meadian")), # handling missing values
+                    ("imputer", SimpleImputer(strategy="median")), # handling missing values
                     ("scaler", StandardScaler())
                 ]
             )
@@ -41,18 +41,18 @@ class DataTransformation: # This function is responsible for data transformation
             cat_pipeline = Pipeline(
                 steps=[
                     ("imputer", SimpleImputer(strategy="most_frequent")),
-                    ("one_hot_encoder", OneHotEncoder()),        #convert categorical into numerical
-                    ("scaler", StandardScaler())
+                    ("one_hot_encoder", OneHotEncoder()),        # convert categorical into numerical (dense output)
+                    ("scaler", StandardScaler(with_mean=False))
                 ]
             )
 
             logging.info(f"Numerical columns: {numerical_columns}")
-            logging.info(f"Catergorical columns: {catergorical_columns}")
+            logging.info(f"Categorical columns: {categorical_columns}")
 
             preprocessor = ColumnTransformer(
                 [
                     ("num_pipeline", num_pipeline, numerical_columns),
-                    ("cat_pipeline", cat_pipeline, catergorical_columns)
+                    ("cat_pipeline", cat_pipeline, categorical_columns)
                 ]
             )
 
@@ -71,7 +71,7 @@ class DataTransformation: # This function is responsible for data transformation
 
             preprocessing_obj = self.get_data_transformer_object()
 
-            target_column_name = "math score"
+            target_column_name = "math_score"
 
             input_feature_train_df = train_df.drop(columns=[target_column_name], axis=1)
             target_feature_train_df = train_df[target_column_name]
