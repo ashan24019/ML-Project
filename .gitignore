@@ -209,3 +209,5 @@ __marimo__/
 artifacts/
 
 catboost_info/
+
+.vscode/
